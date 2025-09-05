@@ -39,6 +39,7 @@ include(cmake/Key4hepConfig.cmake)
 include(GNUInstallDirs)
 
 add_subdirectory(GaudiTutorial)
+add_subdirectory(DD4hepTutorials)
 
 include(CTest)
 if(BUILD_TESTING)
