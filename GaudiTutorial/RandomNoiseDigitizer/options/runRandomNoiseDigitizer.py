@@ -28,14 +28,8 @@ random_noise_digitizer = RandomNoiseDigitizerSolution("RandomNoiseDigitizer",
                                 OutputLevel=INFO
                                 )
 
-from Configurables import MoliereRadiusSolution
-moliere_radius = MoliereRadiusSolution  ("MoliereRadius",
-                                InputCaloHitCollection=random_noise_digitizer.OutputCaloDigiHitCollection,
-                                InputBarycenter=eventStats_functional.OutputEnergyBarycentre,
-                                InputTotalEnergy=eventStats_functional.OutputTotalEnergy)
-
 app_mgr = ApplicationMgr(
-    TopAlg=[eventStats_functional, random_noise_digitizer, moliere_radius],
+    TopAlg=[eventStats_functional, random_noise_digitizer],
     EvtSel='NONE',
     EvtMax=-1,
     ExtSvc=[EventDataSvc("EventDataSvc"), UniqueIDGenSvc("uidSvc")],

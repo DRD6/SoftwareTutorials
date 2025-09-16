@@ -1,2 +1,3 @@
 add_subdirectory(EventStats)
 add_subdirectory(MoliereRadiusFunctional)
+add_subdirectory(RandomNoiseDigitizer)

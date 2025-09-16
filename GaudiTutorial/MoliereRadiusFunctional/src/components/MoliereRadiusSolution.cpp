@@ -1,11 +1,14 @@
+// Gaudi
+#include "Gaudi/Accumulators.h"
+
 // k4FWCore
-#include "k4FWCore/Consumer.h"
+#include "k4FWCore/Transformer.h"
 
 // podio
 #include "podio/UserDataCollection.h"
 
 // edm4hep
-#include "edm4hep/SimCalorimeterHitCollection.h"
+#include "edm4hep/CalorimeterHitCollection.h"
 
 // STL
 #include <string>
@@ -13,41 +16,53 @@
 #include <cmath>
 
 struct MoliereRadiusSolution final
-    : k4FWCore::Consumer<
-        void (
-            const edm4hep::SimCalorimeterHitCollection&,
-            const std::vector<const podio::UserDataCollection<double>*>&,
-            const podio::UserDataCollection<double>&
-        )
+    : k4FWCore::MultiTransformer<
+          std::tuple<podio::UserDataCollection<double>> 
+          ( 
+                const edm4hep::CalorimeterHitCollection&,
+                const std::vector<const podio::UserDataCollection<double>*>&,
+                const podio::UserDataCollection<double>&
+          )
     > {
 
 public:
     // Constructor
     MoliereRadiusSolution(const std::string& name, ISvcLocator* svcLoc)
-        : Consumer(
+        : MultiTransformer(
             name, 
             svcLoc,
+            // Input collections for the transformer
             {
-                KeyValues("InputCaloHitCollection", {"simplecaloRO"}),
-                KeyValues("InputBarycenter", {"Barycenter"}),
+                KeyValues("InputCaloHitCollection", {"RndNoiseCaloDigiHits"}),
+                KeyValues("InputBarycenter", {"Barycentre"}),
                 KeyValues("InputTotalEnergy", {"TotalEnergy"})
+            },
+            // Output collections for the transformer
+            {
+                KeyValues("OutputMoliereRadius", {"MoliereRadius"})
             }
-        ) {}
+        ) { }  
 
 
-    void operator()(const edm4hep::SimCalorimeterHitCollection& InputCaloSimHitCollection,
-                    const std::vector<const podio::UserDataCollection<double>*>& InputBarycenter,
-                    const podio::UserDataCollection<double>& InputTotalEnergy) const override {
+    // Operator: transforms a CalorimeterHitCollection into a tuple of output collections
+    std::tuple<podio::UserDataCollection<double>> 
+    operator()(const edm4hep::CalorimeterHitCollection& InputCaloHitCollection,
+                 const std::vector<const podio::UserDataCollection<double>*>& InputBarycenter,
+                 const podio::UserDataCollection<double>& InputTotalEnergy) const override {
+
+
+        // Define a UserDataCollections for Moliere radius output
+        auto MoliereRadiusCollection = podio::UserDataCollection<double>();
 
         std::vector<HitData> radialHits;
 
+        // Retrieve barycentre and total energy
         double barycentre_x = InputBarycenter[0]->at(0);
         double barycentre_y = InputBarycenter[1]->at(0);
         double totalEnergy = InputTotalEnergy.at(0);
 
-        std::cout << "Barycentre: (" << barycentre_x << ", " << barycentre_y << "), Total Energy: " << totalEnergy << std::endl;
-
-        for (const auto& hit : InputCaloSimHitCollection) {
+        // Step 1: Calculate radius for each hit and store with energy
+        for (const auto& hit : InputCaloHitCollection) {
             const auto& pos = hit.getPosition();
             double dx = pos.x - barycentre_x;
             double dy = pos.y - barycentre_y;
@@ -56,12 +71,12 @@ public:
             radialHits.push_back({r, e});
         }
 
-        // Step 3: Sort hits by radius
+        // Step 2: Sort hits by radius
         std::sort(radialHits.begin(), radialHits.end(), [](const HitData& a, const HitData& b) {
             return a.r < b.r;
         });
 
-        // Step 4: Accumulate energy and find radius at 90%
+        // Step 3: Accumulate energy and find radius at 90%
         double cumulativeEnergy = 0.0;
         double moliereRadius = 0.0;
         for (const auto& hit : radialHits) {
@@ -72,9 +87,20 @@ public:
             }
         }
 
-        info() << "Moliere radius = " << moliereRadius << " mm" << endmsg;
+        info() << "---> Calculated Moliere radius: " << moliereRadius << " mm" << endmsg;
 
-        
+        // Step 4: Store the result in the output collection and the accumulator
+        m_moliere_radius_acc += moliereRadius;
+        MoliereRadiusCollection.push_back(moliereRadius);
+        return std::make_tuple(std::move(MoliereRadiusCollection));
+    }
+
+    // Finalize
+    StatusCode finalize() override {
+
+        info() << "Average Moliere radius over all events: " << m_moliere_radius_acc.mean() << " mm" << endmsg;
+
+        return StatusCode::SUCCESS;
     }
 
 private:
@@ -82,6 +108,8 @@ private:
         double r;      // Radius from barycentre
         double energy; // Energy of the hit
     };
+
+    mutable Gaudi::Accumulators::AveragingCounter<double, Gaudi::Accumulators::atomicity::full> m_moliere_radius_acc;
 };
 
 DECLARE_COMPONENT(MoliereRadiusSolution)
