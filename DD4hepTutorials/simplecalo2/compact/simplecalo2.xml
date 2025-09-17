@@ -1,6 +1,24 @@
+<!--
+-- Copyright (c) 2020-2024 Key4hep-Project.
+--
+-- This file is part of Key4hep.
+-- See https://key4hep.github.io/key4hep-doc/ for further info.
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--     http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+  -->
 <lccdd>
 <!-- #==========================================================================
-     #  AIDA Detector description implementation 
+     #  AIDA Detector description implementation
      #==========================================================================
      # Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
      # All rights reserved.
@@ -39,13 +57,13 @@
     <constant name="CellX"        value="10.0*cm"/>
     <constant name="CellY"        value="CellX"/>
     <constant name="CellZ"        value="SensLayerZ"/>
-    <constant name="LayersNumber" value="20"/>    
+    <constant name="LayersNumber" value="20"/>
   </define>
 
   <includes>
     <gdmlFile  ref="elements.xml"/>
   </includes>
-  
+
   <materials>
     <material name="Vacuum">
       <D type="density" unit="g/cm3" value="0.0000000001" />
@@ -78,7 +96,7 @@
     <vis name="CellVis" alpha="1.0" r="0.95" g="0.92" b="0.92" showDaughters="true" visible="true"/>
   </display>
 
-  <!-- Define the detector. A detector has a name, type to be returned in .cpp file with 
+  <!-- Define the detector. A detector has a name, type to be returned in .cpp file with
        DECLARE_DETELEMENT(type,create_detector_c++method), vis attributes (optional),
        and sensitive-detector (true/false), if sensitive="true" a readout must the passed.
        If a detector contains sub-detectors, their information must be included as below.
@@ -99,6 +117,6 @@
       <!-- NO SPACES BETWEEN ID DESCRIPTORS!!! -->
       <id>calolayer:5,abslayer:1,cellid:10</id>
     </readout>
-  </readouts> 
+  </readouts>
 
 </lccdd>
