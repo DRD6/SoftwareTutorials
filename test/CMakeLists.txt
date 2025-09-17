@@ -23,7 +23,8 @@ add_test(NAME test_EventStats
 
 add_test(NAME test_MoliereRadius
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadius.py)
+               COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadius.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_eventStats.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_moliereRadius.root)
+set_tests_properties(test_MoliereRadius PROPERTIES DEPENDS test_EventStats)
 
 # For LD_LIBRARY_PATH
 # ${PROJECT_BINARY_DIR}                                         # The files <plugins>.components and <plugins>.confdb are here

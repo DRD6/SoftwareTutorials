@@ -12,9 +12,14 @@ from Gaudi.Configuration import INFO
 from k4FWCore import IOSvc, ApplicationMgr
 from Configurables import EventDataSvc, ChronoAuditor, AuditorSvc
 
-io_svc = IOSvc("IOSvc")
-io_svc.Input = # TODO: Specify the input file path
-io_svc.Output = "../../data/simpleCalo_eventStats.root"
+io_svc = IOSvc("IOServices")
+
+# It is possible to set the input and output files directly in the script:
+io_svc.Input =  # TODO: Specify the input file path
+io_svc.Output = # TODO: Specify the output file path (tip: save it in the same folder as the input file with a different name)
+
+# But Gaudi properties can also be set via command line arguments
+# Example: k4run runEventStats.py --IOServices.Input "input.root" --IOServices.Output "output.root"
 
 chra = ChronoAuditor()
 audsvc = AuditorSvc()
