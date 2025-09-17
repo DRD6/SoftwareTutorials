@@ -82,7 +82,8 @@ public:
             double noise = gaussian_noise(random_engine); 
 
             digihit.setCellID(hit.getCellID());
-            // Use the EDM4hep yaml file to get and set the remaining members of CalorimeterHit
+            // Use the EDM4hep yaml file to "guess" the names of the getter and setter functions 
+            // to define the remaining members of the CalorimeterHit class
         }
 
         // Store the result in the output collection
@@ -92,7 +93,7 @@ public:
 private:
 
     SmartIF<IUniqueIDGenSvc> m_uniqueIDSvc{nullptr};
-    // Create a property for the UniqueIDGenSvc name (specified in the steering file)
+    // Create a Gaudi::Property for the UniqueIDGenSvc name (specified in the steering file)
 
     // Create two Gaudi::Property members for the noise mean and width
 
