@@ -43,7 +43,7 @@ set_test_env(test_EventStats)
 
 add_test(NAME test_MoliereRadius
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadius.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_moliereRadius.root)
+               COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadiusSolution.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_moliereRadius.root)
 set_test_env(test_MoliereRadius)
 
 add_test(NAME test_RandomNoiseDigitizer

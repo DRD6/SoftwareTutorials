@@ -38,8 +38,8 @@ eventStats_functional = EventStats("EventStats",
     OutputLevel = INFO
 )
 
-from Configurables import RandomNoiseDigitizer
-random_noise_digitizer = RandomNoiseDigitizer("RandomNoiseDigitizer",
+from Configurables import RandomNoiseDigitizerSolution
+random_noise_digitizer = RandomNoiseDigitizerSolution("RandomNoiseDigitizer",
                                 InputCaloSimHitCollection=["simplecaloRO"],
                                 OutputCaloDigiHitCollection=["CaloDigiHits"],
                                 uidSvcName="uidSvc",
@@ -48,8 +48,14 @@ random_noise_digitizer = RandomNoiseDigitizer("RandomNoiseDigitizer",
                                 OutputLevel=INFO
                                 )
 
+from Configurables import MoliereRadiusSolution
+moliere_radius = MoliereRadiusSolution  ("MoliereRadius",
+                                InputCaloHitCollection=random_noise_digitizer.OutputCaloDigiHitCollection,
+                                InputBarycenter=eventStats_functional.OutputEnergyBarycentre,
+                                InputTotalEnergy=eventStats_functional.OutputTotalEnergy)
+
 app_mgr = ApplicationMgr(
-    TopAlg=[eventStats_functional, random_noise_digitizer],
+    TopAlg=[eventStats_functional, random_noise_digitizer, moliere_radius],
     EvtSel='NONE',
     EvtMax=-1,
     ExtSvc=[EventDataSvc("EventDataSvc"), UniqueIDGenSvc("uidSvc"), audsvc],
