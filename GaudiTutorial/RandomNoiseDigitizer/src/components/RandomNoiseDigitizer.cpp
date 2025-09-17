@@ -77,13 +77,15 @@ public:
     random_engine.seed(engine_seed);
 
     // Create the random distributions for smearing the hit energy
-    std::normal_distribution<double> gaussian_noise{0.0, 0.0}; // Replace with mean and width from properties
+    // [[maybe_unused]] used to avoid downstream build failures due to unused variables
+    [[maybe_unused]] std::normal_distribution<double> gaussian_noise{
+        0.0, 0.0}; // Replace with mean and width from properties
 
     // Loop over the input hits
     for (const auto& hit : InputCaloSimHitCollection) {
       auto digihit = CaloDigiHits.create();
 
-      double noise = gaussian_noise(random_engine);
+      [[maybe_unused]] double noise = gaussian_noise(random_engine);
 
       digihit.setCellID(hit.getCellID());
       // Use the EDM4hep yaml file to "guess" the names of the getter and setter functions

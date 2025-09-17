@@ -61,9 +61,10 @@ public:
     double moliereRadius = 0.0;
 
     // Retrieve barycentre and total energy
-    double barycentre_x = InputBarycenter[0]->at(0);
-    double barycentre_y = InputBarycenter[1]->at(0);
-    double totalEnergy = InputTotalEnergy.at(0);
+    // [[maybe_unused]] used to avoid downstream build failures due to unused variables
+    [[maybe_unused]] double barycentre_x = InputBarycenter[0]->at(0);
+    [[maybe_unused]] double barycentre_y = InputBarycenter[1]->at(0);
+    [[maybe_unused]] double totalEnergy = InputTotalEnergy.at(0);
 
     // Step 1: Calculate radius for each hit and store with energy
     // You can use the HitData struct defined below to store the relevant information
