@@ -25,8 +25,7 @@ using namespace dd4hep;
 
 // Build simple calo geometry
 //
-static Ref_t create_detector(Detector &description, xml_h e,
-                             SensitiveDetector sens) {
+static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens) {
   std::cout << "--> simplecalo2::create_detector() start" << std::endl;
 
   // Get info from the xml file
@@ -34,16 +33,14 @@ static Ref_t create_detector(Detector &description, xml_h e,
   sens.setType("calorimeter");
   xml_det_t x_det = e;
   std::string det_name = x_det.nameStr();
-  std::cout << "--> Going to create " << det_name << ", with ID: " << x_det.id()
-            << std::endl;
+  std::cout << "--> Going to create " << det_name << ", with ID: " << x_det.id() << std::endl;
   xml_dim_t x_dim = x_det.dimensions();
 
   const double CaloX = x_dim.x();
   const double CaloY = x_dim.y();
   const double CaloZ = x_dim.z();
-  std::cout << "--> calo dimensions from XML description: x " << CaloX / m
-            << " m, y " << CaloY / m << " m, z " << CaloZ / m << " m"
-            << std::endl;
+  std::cout << "--> calo dimensions from XML description: x " << CaloX / m << " m, y " << CaloY / m << " m, z "
+            << CaloZ / m << " m" << std::endl;
 
   // Retrieve number of layers to populate the calorimeter container with
   //
@@ -81,48 +78,40 @@ static Ref_t create_detector(Detector &description, xml_h e,
   // Create a container for the calorimeter
   //
   Box Calo(CaloX / 2., CaloY / 2., CaloZ / 2.);
-  Volume CaloVol("CaloVol", Calo,
-                 description.material(x_calo.attr<std::string>(_U(material))));
+  Volume CaloVol("CaloVol", Calo, description.material(x_calo.attr<std::string>(_U(material))));
   CaloVol.setVisAttributes(description, x_calo.visStr());
 
   // Create a container for a calorimeter layer
   // (absorber + active elements)
   //
   Box CaloLayer(CaloLayerX / 2., CaloLayerY / 2., CaloLayerZ / 2.);
-  Volume CaloLayerVol(
-      "CaloLayerVol", CaloLayer,
-      description.material(x_calolayer.attr<std::string>(_U(material))));
+  Volume CaloLayerVol("CaloLayerVol", CaloLayer, description.material(x_calolayer.attr<std::string>(_U(material))));
   CaloLayerVol.setVisAttributes(description, x_calolayer.visStr());
 
   // Place twenty calorimeter layers inside the container
   //
   for (std::size_t i = 0; i < static_cast<std::size_t>(NumberOfLayers); i++) {
-    PlacedVolume CaloLayerPlaced = CaloVol.placeVolume(
-        CaloLayerVol, i,
-        Position(0., 0., -CaloZ / 2. + CaloLayerZ / 2. + i * CaloLayerZ));
+    PlacedVolume CaloLayerPlaced =
+        CaloVol.placeVolume(CaloLayerVol, i, Position(0., 0., -CaloZ / 2. + CaloLayerZ / 2. + i * CaloLayerZ));
     CaloLayerPlaced.addPhysVolID("calolayer", i + 1);
   }
 
   // Place an absorber layer inside the calorimeter layer
   //
   Box AbsLayer(AbsLayerX / 2., AbsLayerY / 2., AbsLayerZ / 2.);
-  Volume AbsLayerVol(
-      "AbsLayerVol", AbsLayer,
-      description.material(x_abslayer.attr<std::string>(_U(material))));
+  Volume AbsLayerVol("AbsLayerVol", AbsLayer, description.material(x_abslayer.attr<std::string>(_U(material))));
   AbsLayerVol.setVisAttributes(description, x_abslayer.visStr());
-  PlacedVolume AbsLayerPlaced = CaloLayerVol.placeVolume(
-      AbsLayerVol, 1, Position(0., 0., -CaloLayerZ / 2. + AbsLayerZ / 2.));
+  PlacedVolume AbsLayerPlaced =
+      CaloLayerVol.placeVolume(AbsLayerVol, 1, Position(0., 0., -CaloLayerZ / 2. + AbsLayerZ / 2.));
   AbsLayerPlaced.addPhysVolID("abslayer", 1);
 
   // Place an active layer inside the calorimeter layer
   //
   Box SensLayer(SensLayerX / 2., SensLayerY / 2., SensLayerZ / 2.);
-  Volume SensLayerVol(
-      "SensLayerVol", SensLayer,
-      description.material(x_senslayer.attr<std::string>(_U(material))));
+  Volume SensLayerVol("SensLayerVol", SensLayer, description.material(x_senslayer.attr<std::string>(_U(material))));
   SensLayerVol.setVisAttributes(description, x_senslayer.visStr());
-  PlacedVolume SensLayerPlaced = CaloLayerVol.placeVolume(
-      SensLayerVol, 1, Position(0., 0., CaloLayerZ / 2. - SensLayerZ / 2.));
+  PlacedVolume SensLayerPlaced =
+      CaloLayerVol.placeVolume(SensLayerVol, 1, Position(0., 0., CaloLayerZ / 2. - SensLayerZ / 2.));
   SensLayerPlaced.addPhysVolID("abslayer", 0);
 
   // Hands-on 4: Place 100 active cells (pixels) inside the calorimeter sensitive layer
@@ -130,7 +119,7 @@ static Ref_t create_detector(Detector &description, xml_h e,
 
   // Hands-on 4: Solution
   // uncomment the line below to include the solution
-  //#include "sc2_solution1.h"
+  // #include "sc2_solution1.h"
 
   // Finalize geometry
   //
