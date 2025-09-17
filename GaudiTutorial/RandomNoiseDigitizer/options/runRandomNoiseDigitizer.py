@@ -25,7 +25,7 @@ audsvc = AuditorSvc()
 audsvc.Auditors = [chra]
 
 io_svc = IOSvc("IOSvc")
-io_svc.Input = "../../data/simpleCalo_eventStats.root"
+io_svc.Input = "../../data/simpleCalo_simulation.root"
 io_svc.Output = "../../data/simpleCalo_noiseDigitizer.root"
 
 from Configurables import EventStats
