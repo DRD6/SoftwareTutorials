@@ -21,7 +21,7 @@ To clone and build the repository, run the following commands:
 source /cvmfs/sw.hsf.org/key4hep/setup.sh
 git clone git@github.com:DRD6/SoftwareTutorials.git
 cd SoftwareTutorials
-mkdir build install 
+mkdir build install
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install -j6

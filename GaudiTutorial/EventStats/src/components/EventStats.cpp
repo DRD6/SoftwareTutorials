@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 // k4FWCore
 #include "k4FWCore/Transformer.h"
 
@@ -22,36 +41,36 @@ struct EventStats final
           std::tuple<
                 std::vector<podio::UserDataCollection<double>>, /* Contains the UserDataCollection of each barycentre component*/
                 podio::UserDataCollection<double>               /* Contains the value of the total deposited energy */
-          > 
+          >
           // The MultiTransformer operates on a SimCalorimeterHitCollection as input
-          ( 
+          (
                 const edm4hep::SimCalorimeterHitCollection&     /* Contains the SimCalorimeterHits correspoding to each energy deposit */
           )
       > {
 
 
 public:
-    
+
     // Constructor
     EventStats(const std::string& name, ISvcLocator* svcLoc)
         : MultiTransformer(
-            name, 
+            name,
             svcLoc,
             // Input collections for the transformer
             {
                 KeyValues("InputCaloHitCollection", {"simplecaloRO"})  /* name of the input calorimeter hit collection */
             },
             // Output collections for the transformer
-            {   
+            {
                 KeyValues("OutputEnergyBarycentre", {"EnergyBarycentre"}),  /* barycentre components per event */
                 KeyValues("OutputTotalEnergy", {"TotalEnergy"})             /* total energy per event */
             }
-        ) 
+        )
         {
             // constructor body
-        }  
+        }
 
-    // Initialize    
+    // Initialize
     StatusCode initialize() override {
 
         if (m_saveHisto.value()) {
@@ -73,7 +92,7 @@ public:
         podio::UserDataCollection<double>               /* additional scalar values (total energy) */
     > operator()(const edm4hep::SimCalorimeterHitCollection& InputSimCaloHitCollection) const override {
 
-                    
+
         //////////////////////////////////////////
         //// DEFINITION OF OUTPUT COLLECTIONS ////
         //////////////////////////////////////////
@@ -116,7 +135,7 @@ public:
         double minEnergy_x = 0.0;
         double minEnergy_y = 0.0;
         double minEnergy_z = 0.0;
-        
+
 
         for (const auto& simhit: InputSimCaloHitCollection) {
 
@@ -153,8 +172,8 @@ public:
 
         barycentre_x /= totalEnergy;
         barycentre_y /= totalEnergy;
-        barycentre_z /= totalEnergy; 
-        
+        barycentre_z /= totalEnergy;
+
         /////////////////////////////////////////
         //// SAVE HISTOGRAMS OF ENERGY STATS ////
         /////////////////////////////////////////
@@ -188,25 +207,25 @@ public:
         info() << "Event statistics:" << endmsg;
         info() << "Total deposited energy = " << totalEnergy << " GeV" << endmsg;
         info() << "Energy Barycentre position: (" << barycentre_x << ", " << barycentre_y << ", " << barycentre_z << ") mm" << endmsg;
-        info() << "Max energy: " << maxEnergy << " GeV at (" 
-             << maxEnergy_x << ", " 
-             << maxEnergy_y << ", " 
+        info() << "Max energy: " << maxEnergy << " GeV at ("
+             << maxEnergy_x << ", "
+             << maxEnergy_y << ", "
              << maxEnergy_z << ") mm" << endmsg;
-        info() << "Min energy: " << minEnergy << " GeV at (" 
-             << minEnergy_x << ", " 
-             << minEnergy_y << ", " 
+        info() << "Min energy: " << minEnergy << " GeV at ("
+             << minEnergy_x << ", "
+             << minEnergy_y << ", "
              << minEnergy_z << ") mm" << endmsg;
         info() << "MaxXYZ values: (" << max_pos_x << ", " << max_pos_y << ", " << max_pos_z << ") mm" << endmsg;
         info() << "MinXYZ values: (" << min_pos_x << ", " << min_pos_y << ", " << min_pos_z << ") mm" << endmsg;
         info() << "------------------------------" << endmsg;
-      
+
         ////////////////
         //// OUTPUT ////
         ////////////////
 
-        return std::make_tuple(std::move(Barycentre), 
+        return std::make_tuple(std::move(Barycentre),
                                std::move(TotalDepositedEnergy));
-        
+
     }
 
     // Finalize
@@ -230,7 +249,7 @@ public:
     }
 
     private:
-    
+
         Gaudi::Property<bool> m_saveHisto{this, "SaveHistograms", false, "flag to save histograms"};
 
         TH1D* hTotalEnergy;
