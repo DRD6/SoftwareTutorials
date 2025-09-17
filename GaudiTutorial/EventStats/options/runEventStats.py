@@ -2,18 +2,28 @@
 # This script sets up the necessary services and configurations for the EventStats algorithm
 
 # How to write the script:
-# 1. Import necessary modules (e.g. gaudi functional, application manager, services)
-# 2. Set up the input and output services (IOSvc)
-# 3. Configure the EventStats algorithm with the required parameters
-# 4. Create the Application Manager and set the top algorithm
+# 1. Import necessary modules (e.g. services, gaudi functional, application manager)
+# 2. Setup the input and output services (IOSvc)
+# 3. Setup external services (e.g. ChronoAuditor, AuditorSvc)
+# 4. Configure the EventStats algorithm with the required parameters
+# 5. Create the Application Manager and set the top algorithms
 
 from Gaudi.Configuration import INFO
 from k4FWCore import IOSvc, ApplicationMgr
-from Configurables import EventDataSvc
+from Configurables import EventDataSvc, ChronoAuditor, AuditorSvc
 
-io_svc = IOSvc("IOSvc")
-io_svc.Input =      # TODO: Specify the input file path
-io_svc.Output =     # TODO: Specify the output file path
+io_svc = IOSvc("IOServices")
+
+# It is possible to set the input and output files directly in the script:
+io_svc.Input =  # TODO: Specify the input file path
+io_svc.Output = # TODO: Specify the output file path (tip: save it in the same folder as the input file with a different name)
+
+# But Gaudi properties can also be set via command line arguments
+# Example: k4run runEventStats.py --IOServices.Input "input.root" --IOServices.Output "output.root"
+
+chra = ChronoAuditor()
+audsvc = AuditorSvc()
+audsvc.Auditors = [chra]
 
 from Configurables import EventStats
 
@@ -29,12 +39,11 @@ from Configurables import EventStats
 
 eventStats_functional = EventStats(
     "EventStats",
-    
-    InputCaloHitCollection= [??????],       # TODO: Specify the name of the input calorimeter hit collection
-    OutputEnergyBarycentre=["EnergyBarycentreX", "EnergyBarycentreY", "EnergyBarycentreZ"],
-    ?????? = [??????],                      # TODO: Add the output collection for total energy
-    ?????? = ??????,                        # TODO: Add the gaudi property to save histograms
-    OutputLevel=INFO
+    InputCaloHitCollection = [??????],       # TODO: Specify the name of the input calorimeter hit collection
+    OutputEnergyBarycentre = ["EnergyBarycentreX", "EnergyBarycentreY", "EnergyBarycentreZ"],
+    ?????? = [??????],                       # TODO: Add the output collection for total energy
+    ?????? = ??????,                         # TODO: Add the gaudi property to save histograms
+    OutputLevel = INFO
 )
 
 # ==========================================
@@ -48,9 +57,9 @@ eventStats_functional = EventStats(
 # 1. Fill in the missing values (??????)
 
 app_mgr = ApplicationMgr(
-    TopAlg=[??????],
-    EvtSel='NONE',
-    EvtMax=-1,
-    ExtSvc=[EventDataSvc("EventDataSvc")],
-    StopOnSignal=True,
+    TopAlg = [??????],
+    EvtSel = 'NONE',
+    EvtMax = -1,
+    ExtSvc = [EventDataSvc("EventDataSvc"), audsvc],
+    StopOnSignal = True,
 )
