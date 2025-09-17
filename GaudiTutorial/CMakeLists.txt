@@ -19,3 +19,17 @@ limitations under the License.
 add_subdirectory(EventStats)
 add_subdirectory(MoliereRadiusFunctional)
 add_subdirectory(RandomNoiseDigitizer)
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${PROJECT_SOURCE_DIR}/GaudiTutorial/data)
+
+set(SIM_FILE ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root)
+
+if(NOT EXISTS ${SIM_FILE})
+    message(STATUS "Downloading simpleCalo_simulation.root ...")
+    execute_process(
+        COMMAND wget -O ${SIM_FILE} https://fccsw.web.cern.ch/fccsw/tutorials/DRD6_2025_Ancona/simpleCalo_simulation.root
+    )
+else()
+    message(STATUS "File already exists: ${SIM_FILE}, skipping download.")
+endif()

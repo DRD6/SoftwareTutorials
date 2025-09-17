@@ -30,6 +30,3 @@ install(TARGETS EventStatsPlugins
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${CMAKE_PROJECT_NAME}"
   COMPONENT dev)
-
-execute_process(COMMAND mkdir ${PROJECT_SOURCE_DIR}/GaudiTutorial/data)
-execute_process(COMMAND wget -O ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root https://fccsw.web.cern.ch/fccsw/tutorials/DRD6_2025_Ancona/simpleCalo_simulation.root)

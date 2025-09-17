@@ -17,17 +17,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]
 
+function(set_test_env _testname)
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
+    "ROOT_INCLUDE_PATH=$<$<TARGET_EXISTS:podio::podio>:$<TARGET_FILE_DIR:podio::podio>/../include>:$<$<TARGET_EXISTS:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>/../include>:$ENV{ROOT_INCLUDE_PATH}"
+  )
+
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
+    "LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib64:${PROJECT_BINARY_DIR}:${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}:${PROJECT_BINARY_DIR}/genConfDir/${PackageName}:<$<TARGET_EXISTS:ROOT::Core>:$<TARGET_FILE_DIR:ROOT::Core>>:$<$<TARGET_EXISTS:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>>:$<$<TARGET_EXISTS:podio::podio>:$<TARGET_FILE_DIR:podio::podio>>:$ENV{LD_LIBRARY_PATH}"
+  )
+
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
+    "PYTHONPATH=${CMAKE_BINARY_DIR}:${PROJECT_BINARY_DIR}/genConfDir:$ENV{PYTHONPATH}"
+  )
+
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
+    "GAUDI_PLUGIN_PATH=${CMAKE_BINARY_DIR}/.plugins:${CMAKE_INSTALL_PREFIX}/lib64:$ENV{GAUDI_PLUGIN_PATH}"
+  )
+
+endfunction()
+
 add_test(NAME test_EventStats
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                COMMAND k4run GaudiTutorial/EventStats/options/runEventStatsSolution.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_eventStats.root)
+set_test_env(test_EventStats)
 
 add_test(NAME test_MoliereRadius
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadius.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_moliereRadius.root)
+set_test_env(test_MoliereRadius)
 
 add_test(NAME test_RandomNoiseDigitizer
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                COMMAND k4run GaudiTutorial/RandomNoiseDigitizer/options/runRandomNoiseDigitizer.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_noiseDigitizer.root)
+set_test_env(test_MoliereRadius)
 
 # For LD_LIBRARY_PATH
 # ${PROJECT_BINARY_DIR}                                         # The files <plugins>.components and <plugins>.confdb are here
