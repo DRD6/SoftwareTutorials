@@ -3,8 +3,11 @@ from k4FWCore import IOSvc, ApplicationMgr
 from Configurables import EventDataSvc, AuditorSvc, ChronoAuditor
 
 io_svc = IOSvc("IOSvc")
-io_svc.Input = "../../data/simpleCalo_simulation.root"
-io_svc.Output = "../../data/simpleCalo_eventStats.root"
+## For maintenance purposes, this version of the steering file
+# does not initialize the input/output file within the Python script.
+# Instead, it expects the input file to be provided as a command-line argument.
+# Example:
+#   k4run runEventStatsSolution.py --IOSvc.Input "../../data/simpleCalo_simulation.root" --IOSvc.Output "../../data/simpleCalo_eventStats.root"
 
 chra = ChronoAuditor()
 audsvc = AuditorSvc()

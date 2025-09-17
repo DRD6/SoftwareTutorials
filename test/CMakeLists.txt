@@ -16,18 +16,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ]]
-add_test(NAME CreateExampleEventData
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/options/createExampleEventData.py)
 
-add_test(NAME ReadExampleEventData
+add_test(NAME test_EventStats
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/options/readExampleEventData.py)
-set_property(TEST ReadExampleEventData APPEND PROPERTY DEPENDS CreateExampleEventData)
+               COMMAND k4run GaudiTutorial/EventStats/options/runEventStatsSolution.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_eventStats.root)
 
-add_test(NAME HelloWorldAlg
+add_test(NAME test_MoliereRadius
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/options/createHelloWorld.py)
+               COMMAND k4run GaudiTutorial/MoliereRadiusFunctional/options/runMoliereRadius.py)
 
 # For LD_LIBRARY_PATH
 # ${PROJECT_BINARY_DIR}                                         # The files <plugins>.components and <plugins>.confdb are here

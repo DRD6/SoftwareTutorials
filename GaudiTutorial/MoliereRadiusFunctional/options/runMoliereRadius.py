@@ -1,21 +1,23 @@
 from Gaudi.Configuration import INFO
 from k4FWCore import IOSvc, ApplicationMgr
-from Configurables import EventDataSvc, UniqueIDGenSvc
+from Configurables import EventDataSvc, UniqueIDGenSvc, ChronoAuditor, AuditorSvc
+
+chra = ChronoAuditor()
+audsvc = AuditorSvc()
+audsvc.Auditors = [chra]
 
 io_svc = IOSvc("IOSvc")
-# io_svc.Input = "/afs/cern.ch/work/a/adevita/public/DD4hepTutorials/simplecalo.root"
-io_svc.Input = "../../data/simplecalo1_example.root"
-io_svc.Output = "output.root"
+io_svc.Input = "../../data/simpleCalo_eventStats.root"
+io_svc.Output = "../../data/simpleCalo_moliereRadius.root"
 
 from Configurables import EventStats
 
 eventStats_functional = EventStats("EventStats",
-        
-    InputCaloHitCollection=["simplecaloRO"],
-    OutputEnergyBarycentre=["EnergyBarycentreX", "EnergyBarycentreY", "EnergyBarycentreZ"],
-    OutputTotalEnergy=["TotalEnergy"],
-    SaveHistograms=True,
-    OutputLevel=INFO
+    InputCaloHitCollection = ["simplecaloRO"],
+    OutputEnergyBarycentre = ["EnergyBarycentreX", "EnergyBarycentreY", "EnergyBarycentreZ"],
+    OutputTotalEnergy = ["TotalEnergy"],
+    SaveHistograms = True,
+    OutputLevel = INFO
 )
 
 from Configurables import RandomNoiseDigitizerSolution
@@ -38,6 +40,6 @@ app_mgr = ApplicationMgr(
     TopAlg=[eventStats_functional, random_noise_digitizer, moliere_radius],
     EvtSel='NONE',
     EvtMax=-1,
-    ExtSvc=[EventDataSvc("EventDataSvc"), UniqueIDGenSvc("uidSvc")],
+    ExtSvc=[EventDataSvc("EventDataSvc"), UniqueIDGenSvc("uidSvc"), audsvc],
     StopOnSignal=True,
 )
