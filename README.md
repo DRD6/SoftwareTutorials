@@ -19,7 +19,7 @@ To clone and build the repository, run the following commands:
 
 ``` bash
 source /cvmfs/sw.hsf.org/key4hep/setup.sh
-git clone git@github.com:DRD6/SoftwareTutorials.git
+git clone https://github.com/DRD6/SoftwareTutorials.git
 cd SoftwareTutorials
 mkdir build install
 cd build
