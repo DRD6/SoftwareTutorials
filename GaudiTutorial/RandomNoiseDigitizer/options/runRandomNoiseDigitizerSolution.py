@@ -39,8 +39,8 @@ eventStats_functional = EventStats("EventStats",
     OutputLevel=INFO
 )
 
-from Configurables import RandomNoiseDigitizer
-random_noise_digitizer = RandomNoiseDigitizer("RandomNoiseDigitizer",
+from Configurables import RandomNoiseDigitizerSolution
+random_noise_digitizer = RandomNoiseDigitizerSolution("RandomNoiseDigitizer",
                                 InputCaloSimHitCollection=["simplecaloRO"],
                                 OutputCaloDigiHitCollection=["CaloDigiHits"],
                                 uidSvcName="uidSvc",
