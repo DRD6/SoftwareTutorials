@@ -31,6 +31,9 @@
 #include "edm4hep/CalorimeterHitCollection.h"
 #include "edm4hep/SimCalorimeterHitCollection.h"
 
+// dd4hep
+#include <DD4hep/DD4hepUnits.h>
+
 // STL
 #include <random>
 #include <string>
@@ -75,17 +78,21 @@ public:
     random_engine.seed(engine_seed);
 
     // Create the random distributions for smearing the hit energy
-    std::normal_distribution<double> gaussian_noise{m_noise_mean.value(), m_noise_width.value()};
+    // By multiplying with dd4hep::MeV, we convert the input to dd4hep default units
+    std::normal_distribution<double> gaussian_noise{m_noise_mean.value() * dd4hep::MeV,
+                                                    m_noise_width.value() * dd4hep::MeV};
 
     // Loop over the input hits
     for (const auto& hit : InputCaloSimHitCollection) {
       auto digihit = CaloDigiHits.create();
 
+      // will be in dd4hep default units, since gaussian_noise is in default units
       double noise = gaussian_noise(random_engine);
 
       digihit.setCellID(hit.getCellID());
-      digihit.setEnergy(hit.getEnergy() + noise);
-      digihit.setEnergyError(m_noise_width);
+      // hit.getEnergy() is already in GeV (see yaml file), so only cast noise to GeV
+      digihit.setEnergy(hit.getEnergy() + noise / dd4hep::GeV);
+      digihit.setEnergyError(m_noise_width / dd4hep::GeV); // set energy error to the width of the noise
       digihit.setPosition(hit.getPosition());
     }
 
@@ -99,8 +106,8 @@ private:
       this, "uidSvcName", "UniqueIDGenSvc",
       "The name of the service for generating unique, but reproducable random seeds"};
 
-  Gaudi::Property<double> m_noise_mean{this, "NoiseMean", 0.0, "Mean of the Gaussian noise to be added"};
-  Gaudi::Property<double> m_noise_width{this, "NoiseWidth", 0.1, "Width of the Gaussian noise to be added"};
+  Gaudi::Property<double> m_noise_mean{this, "NoiseMean", 1e-3, "Mean of the Gaussian noise to be added in MeV"};
+  Gaudi::Property<double> m_noise_width{this, "NoiseWidth", 1e-4, "Width of the Gaussian noise to be added in MeV"};
 };
 
 DECLARE_COMPONENT(RandomNoiseDigitizerSolution)

@@ -31,6 +31,9 @@
 #include "edm4hep/CalorimeterHitCollection.h"
 #include "edm4hep/SimCalorimeterHitCollection.h"
 
+// dd4hep
+#include <DD4hep/DD4hepUnits.h>
+
 // STL
 #include <random>
 #include <string>

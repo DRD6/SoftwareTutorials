@@ -44,8 +44,8 @@ random_noise_digitizer = RandomNoiseDigitizerSolution("RandomNoiseDigitizer",
                                 InputCaloSimHitCollection=["simplecaloRO"],
                                 OutputCaloDigiHitCollection=["CaloDigiHits"],
                                 uidSvcName="uidSvc",
-                                NoiseMean=1e-6,
-                                NoiseWidth=1e-7,
+                                NoiseMean=1e-3,
+                                NoiseWidth=1e-4,
                                 OutputLevel=INFO
                                 )
 

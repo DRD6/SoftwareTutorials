@@ -22,6 +22,7 @@ gaudi_add_module(RandomNoiseDigitizerPlugins
                  LINK Gaudi::GaudiKernel
                       k4FWCore::k4FWCore
                       EDM4HEP::edm4hep
+                      DD4hep::DDCore
                       )
 
 install(TARGETS RandomNoiseDigitizerPlugins
