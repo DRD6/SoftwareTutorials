@@ -48,7 +48,7 @@ set_test_env(test_MoliereRadius)
 
 add_test(NAME test_RandomNoiseDigitizer
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run GaudiTutorial/RandomNoiseDigitizer/options/runRandomNoiseDigitizer.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_noiseDigitizer.root)
+               COMMAND k4run GaudiTutorial/RandomNoiseDigitizer/options/runRandomNoiseDigitizerSolution.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_noiseDigitizer.root)
 set_test_env(test_MoliereRadius)
 
 # For LD_LIBRARY_PATH
