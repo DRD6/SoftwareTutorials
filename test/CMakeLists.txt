@@ -17,13 +17,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]
 
+# Function to set the environment variables for tests
+function(set_test_env testname)
+  # ROOT include path
+  set_property(TEST ${testname} APPEND PROPERTY ENVIRONMENT
+    "ROOT_INCLUDE_PATH=$<$<TARGET_EXISTS:podio::podio>:$<TARGET_FILE_DIR:podio::podio>/../include>:$<$<TARGET_EXISTS:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>/../include>:$ENV{ROOT_INCLUDE_PATH}"
+  )
 
+  # LD_LIBRARY_PATH: include EventStats build and genConf
+  set_property(TEST ${testname} APPEND PROPERTY ENVIRONMENT
+    "LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}:${PROJECT_BINARY_DIR}/${PROJECT_NAME}:${PROJECT_BINARY_DIR}/${PROJECT_NAME}/genConfDir/${PROJECT_NAME}:${PROJECT_BINARY_DIR}/test:${PROJECT_BINARY_DIR}/test/genConfDir:${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats:${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats/genConfDir/EventStats:$<$<TARGET_EXISTS:ROOT::Core>:$<TARGET_FILE_DIR:ROOT::Core>>:$<$<TARGET_EXISTS:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>>:$<$<TARGET_EXISTS:podio::podio>:$<TARGET_FILE_DIR:podio::podio>>:$ENV{LD_LIBRARY_PATH}"
+  )
 
+  # PYTHONPATH: include EventStats genConf
+  set_property(TEST ${testname} APPEND PROPERTY ENVIRONMENT
+    "PYTHONPATH=${PROJECT_BINARY_DIR}/test/genConfDir:${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats/genConfDir:$ENV{PYTHONPATH}"
+  )
+
+  # GAUDI_PLUGIN_PATH: add EventStats
+  set_property(TEST ${testname} APPEND PROPERTY ENVIRONMENT
+    "GAUDI_PLUGIN_PATH=${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats:${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats/genConfDir/EventStats:$ENV{GAUDI_PLUGIN_PATH}"
+  )
+endfunction()
 
 
 add_test(NAME test_EventStats
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                COMMAND k4run GaudiTutorial/EventStats/options/runEventStatsSolution.py --IOSvc.Input ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_simulation.root --IOSvc.Output ${PROJECT_SOURCE_DIR}/GaudiTutorial/data/simpleCalo_eventStats.root)
+set_test_env(test_EventStats)
 
 add_test(NAME test_MoliereRadius
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
