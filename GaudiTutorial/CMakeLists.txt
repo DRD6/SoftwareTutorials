@@ -16,6 +16,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ]]
+
+project(GaudiTutorial LANGUAGES CXX)
+
 add_subdirectory(EventStats)
 add_subdirectory(MoliereRadiusFunctional)
 add_subdirectory(RandomNoiseDigitizer)
