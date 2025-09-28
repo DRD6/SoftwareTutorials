@@ -20,7 +20,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 
 project(SoftwareTutorials LANGUAGES CXX)
-message(STATUS "PROJECT_NAME = ${PROJECT_NAME}")
 
 # please keep this layout for version setting, used by the automatic tagging script
 set(PACKAGE_VERSION_MAJOR 1)
