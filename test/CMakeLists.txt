@@ -50,17 +50,21 @@ get_filename_component(CURRENT_DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(test_environment "\
 LD_LIBRARY_PATH=\
 ${PROJECT_BINARY_DIR}:\
+${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats:\
 ${PROJECT_BINARY_DIR}/${PROJECT_NAME}:\
 ${CMAKE_CURRENT_BINARY_DIR}:\
 ${CMAKE_CURRENT_BINARY_DIR}/genConfDir/${CURRENT_DIR_NAME}:\
 $ENV{LD_LIBRARY_PATH};\
 \
 PYTHONPATH=\
+${PROJECT_BINARY_DIR}/GaudiTutorial/EventStats/genConfDir:\
 ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/genConfDir:\
 ${CMAKE_CURRENT_BINARY_DIR}/genConfDir:\
 $ENV{PYTHONPATH};\
-"
-)
+")
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 set_tests_properties(${test_names} PROPERTIES ENVIRONMENT "${test_environment}")
 
+message(STATUS "================ Test Environment ================")
+message(STATUS "${test_environment}")
+message(STATUS "=================================================")
