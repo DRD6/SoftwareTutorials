@@ -17,14 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]
 file(GLOB _plugin_sources src/components/*.cpp)
-gaudi_add_module(EventStatsPlugins
+
+set(PackageName EventStats)
+
+gaudi_add_module(${PackageName}
                  SOURCES ${_plugin_sources}
                  LINK Gaudi::GaudiKernel
                       k4FWCore::k4FWCore
                       EDM4HEP::edm4hep
                       )
 
-install(TARGETS EventStatsPlugins
+install(TARGETS ${PackageName}
   EXPORT ${CMAKE_PROJECT_NAME}Targets
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
